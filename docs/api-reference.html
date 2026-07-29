@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Reference — AccumulatePlatform</title>
+<meta name="description" content="All 284 AccumulatePlatform endpoints across 32 domains, searchable.">
+<link rel="icon" type="image/png" href="https://bizfirstai.com/website/assets/Logo/logo-m.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --ink: #0B0E11; --ink-2: #14181D; --ink-3: #1B2027;
+    --paper: #EDEAE1; --paper-dim: #B9B6AC;
+    --gold: #C9972E; --gold-bright: #E8B54D; --teal: #3E9C93;
+    --line: #262B31; --muted: #8B9198;
+    --font-display: 'IBM Plex Sans', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--ink); color: var(--paper); font-family: var(--font-display); line-height: 1.6; }
+  a { color: var(--gold); }
+  ::selection { background: var(--gold); color: var(--ink); }
+  :focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 2px; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 28px; }
+
+  nav.top { position: sticky; top: 0; z-index: 50; background: rgba(11,14,17,0.88); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  nav.top .wrap { display: flex; align-items: center; justify-content: space-between; padding-top: 16px; padding-bottom: 16px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--paper); font-weight: 600; font-size: 15px; }
+  .brand img { height: 24px; width: auto; }
+  .brand .mark { font-family: var(--font-mono); color: var(--gold); }
+  nav.top .links { display: flex; align-items: center; gap: 28px; font-size: 14px; }
+  nav.top .links a { color: var(--paper-dim); text-decoration: none; }
+  nav.top .links a:hover { color: var(--paper); }
+  nav.top .links a.active { color: var(--paper); }
+  nav.top .links a.cta { color: var(--ink); background: var(--gold); padding: 8px 16px; border-radius: 6px; font-weight: 600; }
+  nav.top .links a.cta:hover { background: var(--gold-bright); }
+  @media (max-width: 720px) { nav.top .links { display: none; } }
+
+  .page-header { padding: 56px 0 32px; border-bottom: 1px solid var(--line); }
+  .eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--teal); margin-bottom: 14px; }
+  h1 { font-size: clamp(28px, 4vw, 38px); font-weight: 700; margin: 0 0 14px; letter-spacing: -0.4px; }
+  .page-header p { color: var(--paper-dim); max-width: 60ch; font-size: 15.5px; margin: 0 0 24px; }
+
+  .search-bar {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+    padding: 12px 16px; max-width: 520px;
+  }
+  .search-bar input {
+    flex: 1; background: none; border: none; outline: none;
+    color: var(--paper); font-family: var(--font-mono); font-size: 14px;
+  }
+  .search-bar input::placeholder { color: var(--muted); }
+  .search-bar .count { font-family: var(--font-mono); font-size: 12px; color: var(--muted); white-space: nowrap; }
+
+  main { padding: 40px 0 96px; }
+  .domain-block { border: 1px solid var(--line); border-radius: 10px; margin-bottom: 14px; overflow: hidden; background: var(--ink-2); }
+  .domain-block summary {
+    cursor: pointer; list-style: none;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px; font-weight: 600; font-size: 15px;
+  }
+  .domain-block summary::-webkit-details-marker { display: none; }
+  .domain-block summary .meta { display: flex; align-items: center; gap: 12px; }
+  .domain-block summary .count { font-family: var(--font-mono); font-size: 12px; color: var(--gold); font-weight: 500; }
+  .domain-block summary .chevron { color: var(--muted); transition: transform 0.15s ease; font-size: 12px; }
+  .domain-block[open] summary .chevron { transform: rotate(90deg); }
+  .domain-block .endpoints { border-top: 1px solid var(--line); }
+  .endpoint-row {
+    display: flex; align-items: baseline; gap: 14px;
+    padding: 10px 20px; font-family: var(--font-mono); font-size: 13px;
+    border-bottom: 1px solid var(--line);
+  }
+  .endpoint-row:last-child { border-bottom: none; }
+  .endpoint-row .method { font-weight: 600; width: 42px; flex-shrink: 0; }
+  .endpoint-row .method.GET { color: var(--teal); }
+  .endpoint-row .method.POST { color: var(--gold); }
+  .endpoint-row .method.PUT { color: #6b9ee8; }
+  .endpoint-row .method.DELETE { color: #e06b6b; }
+  .endpoint-row .path { color: var(--paper-dim); word-break: break-all; }
+  .endpoint-row.hidden { display: none; }
+  .domain-block.hidden { display: none; }
+
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); font-size: 14px; }
+
+  footer { padding: 32px 0 48px; border-top: 1px solid var(--line); }
+  footer .wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 13px; color: var(--muted); }
+  footer a { color: var(--muted); }
+  footer a:hover { color: var(--paper); }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="wrap">
+    <a href="index.html" class="brand">
+      <img src="https://bizfirstai.com/website/assets/Logo/logo-m.png" alt="BizFirstAi">
+      Accumulate<span class="mark">Platform</span>
+    </a>
+    <div class="links">
+      <a href="get-started.html">Guide</a>
+      <a href="api-reference.html" class="active">Reference</a>
+      <a href="https://docs.bizfirstai.com/search" target="_blank" rel="noopener">Search Docs</a>
+      <a href="https://accumulateplatform.com/swagger/index.html" target="_blank" rel="noopener" class="cta">Open Swagger ↗</a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="wrap">
+    <div class="eyebrow">Reference</div>
+    <h1>API Reference</h1>
+    <p>All 284 endpoints from the live spec, grouped into 32 domains. This is a browsable mirror — for request/response schemas and "Try it out," use the live Swagger UI.</p>
+    <div class="search-bar">
+      <span style="color:var(--muted);font-family:var(--font-mono);font-size:13px;">/</span>
+      <input type="text" id="search" placeholder="Filter by path, method, or domain name…" autocomplete="off">
+      <span class="count" id="result-count"></span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="domains-container"></div>
+  <div class="empty-state" id="empty-state" style="display:none;">No endpoints match that filter.</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>AccumulatePlatform — a BizFirstAi product</span>
+    <span>
+      <a href="index.html">Home</a> ·
+      <a href="get-started.html">Guide</a> ·
+      <a href="https://bizfirstai.com" target="_blank" rel="noopener">bizfirstai.com</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+  const DATA = {"OperateAI":[["POST","/api/v1/messaging/Ai/SendMessage"],["POST","/api/v1/messaging/Ai/SearchMessages"],["POST","/api/v1/messaging/Ai/AddKnoweldgeSource"],["POST","/api/v1/messaging/Ai/SetupAlProject"]],"OperateID.com Translation Services":[["GET","/api/v1/OperateID/AmlOnChainIDLookup/TranslateNameToDataAsUrl/{Name}"],["GET","/api/v1/OperateID/AmlOnChainIDLookup/TranslateNameToData/{Name}"],["GET","/api/v1/OperateID/BankOnLedgerIDLookup/TranslateNameToDataAsUrl/{Name}"],["GET","/api/v1/OperateID/BankOnLedgerIDLookup/TranslateNameToData/{Name}"],["GET","/api/v1/OperateID/CertifiedItemsIDLookup/TranslateNameToDataAsUrl/{Name}"],["GET","/api/v1/OperateID/CertifiedItemsIDLookup/TranslateNameToData/{Name}"],["GET","/api/v1/OperateID/KycOnChainIDLookup/TranslateNameToDataAsUrl/{Name}"],["GET","/api/v1/OperateID/KycOnChainIDLookup/TranslateNameToData/{Name}"],["GET","/api/v1/OperateID/LedgerDocumentsIDLookup/TranslateNameToDataAsUrl/{Name}"],["GET","/api/v1/OperateID/LedgerDocumentsIDLookup/TranslateNameToData/{Name}"],["GET","/api/v1/OperateID/NameLookupOperateID/TranslateNameToDataAsUrl/{Name}"],["GET","/api/v1/OperateID/NameLookupOperateID/TranslateNameToData/{Name}"],["GET","/api/v1/OperateID/QobotoIDLookup/TranslateNameToDataAsUrl/{Name}"],["GET","/api/v1/OperateID/QobotoIDLookup/TranslateNameToData/{Name}"]],"Softwate Testing  - Api ":[["GET","/api/v1/SoftwareTesting/api/request/GetApiRequestInfo"],["GET","/api/v1/SoftwareTesting/api/request/GetApiRequestInfoByTestCycleID"],["GET","/api/v1/SoftwareTesting/api/request/ExecuteApiTestByApiRequestID"],["GET","/api/v1/SoftwareTesting/api/request/ExecuteApiTestByCycleID"]],"BankOnLedger.com - Interact with Your Decentralized Bank":[["GET","/api/v1/BankOnLedger/GetDataItem/All"],["GET","/api/v1/BankOnLedger/GetDataItem/PublicRecipient"],["GET","/api/v1/BankOnLedger/GetDataItem/PublicRecipientAddress"],["GET","/api/v1/BankOnLedger/GetDataItem/PublicSenderAddress"],["GET","/api/v1/BankOnLedger/GetDataItem/DonationAddress"],["GET","/api/v1/BankOnLedger/GetDataItem/Did"],["GET","/api/v1/BankOnLedger/GetDataItem/Oid"],["GET","/api/v1/BankOnLedger/GetDataItem/AccumulateCertifiedHackathon0001Winner"],["GET","/api/v1/BankOnLedger/GetDataValue/All"],["GET","/api/v1/BankOnLedger/GetDataValue/PublicRecipient"],["GET","/api/v1/BankOnLedger/GetDataValue/PublicRecipientAddress"],["GET","/api/v1/BankOnLedger/GetDataValue/PublicSenderAddress"],["GET","/api/v1/BankOnLedger/GetDataValue/DonationAddress"],["GET","/api/v1/BankOnLedger/GetDataValue/AccumulateCertifiedHackathon0001Winner"],["GET","/api/v1/BankOnLedger/GetDataValue/OperateCertifiedHackathon0001Winner"]],"Blackchain Interactions":[["GET","/api/v1/BankOnLedger/GetDataItem/GetDataAccountCustom"],["GET","/api/v1/BankOnLedger/GetDataItem/GetDataItem_ByTarget"],["GET","/api/v1/BankOnLedger/GetDataItem/GetData"],["GET","/api/v1/BankOnLedger/GetDataItem/GetDataBase64"],["GET","/api/v1/BankOnLedger/GetDataItem/GetDataDiscovery"],["GET","/api/v1/BankOnLedger/GetDataValue/GetDataAccountCustom"],["GET","/api/v1/BankOnLedger/GetDataValue/GetDataItem_ByTarget"],["GET","/api/v1/BankOnLedger/GetDataValue/GetData"],["GET","/api/v1/BankOnLedger/GetDataValue/GetDataBase64"],["GET","/api/v1/BankOnLedger/GetDataValue/GetDataDiscovery"],["GET","/api/v1/BizFirstAiAgent/GetDataAccountCustom"],["GET","/api/v1/BizFirstAiAgent/GetDataItem_ByTarget"],["GET","/api/v1/BizFirstAiAgent/GetData"],["GET","/api/v1/BizFirstAiAgent/GetDataBase64"],["GET","/api/v1/BizFirstAiAgent/GetDataDiscovery"],["GET","/api/v1/BizFirstAiDataStore/GetDataAccountCustom"],["GET","/api/v1/BizFirstAiDataStore/GetDataItem_ByTarget"],["GET","/api/v1/BizFirstAiDataStore/GetData"],["GET","/api/v1/BizFirstAiDataStore/GetDataBase64"],["GET","/api/v1/BizFirstAiDataStore/GetDataDiscovery"],["GET","/api/v1/DataQuerier/GetDataAccountCustom"],["GET","/api/v1/DataQuerier/GetDataItem_ByTarget"],["GET","/api/v1/DataQuerier/GetData"],["GET","/api/v1/DataQuerier/GetDataBase64"],["GET","/api/v1/DataQuerier/GetDataDiscovery"],["GET","/api/v1/KycOnLedgerDataItem/GetDataAccountCustom"],["GET","/api/v1/KycOnLedgerDataItem/GetDataItem_ByTarget"],["GET","/api/v1/KycOnLedgerDataItem/GetData"],["GET","/api/v1/KycOnLedgerDataItem/GetDataBase64"],["GET","/api/v1/KycOnLedgerDataItem/GetDataDiscovery"],["GET","/api/v1/LedgerDocumentsDataItem/GetDataAccountCustom"],["GET","/api/v1/LedgerDocumentsDataItem/GetDataItem_ByTarget"],["GET","/api/v1/LedgerDocumentsDataItem/GetData"],["GET","/api/v1/LedgerDocumentsDataItem/GetDataBase64"],["GET","/api/v1/LedgerDocumentsDataItem/GetDataDiscovery"],["GET","/did/GetDataAccountCustom"],["GET","/did/GetDataItem_ByTarget"],["GET","/did/GetData"],["GET","/did/GetDataBase64"],["GET","/did/GetDataDiscovery"],["GET","/api/v1/Id/GetDataAccountCustom"],["GET","/api/v1/Id/GetDataItem_ByTarget"],["GET","/api/v1/Id/GetData"],["GET","/api/v1/Id/GetDataBase64"],["GET","/api/v1/Id/GetDataDiscovery"],["GET","/oid/GetDataAccountCustom"],["GET","/oid/GetDataItem_ByTarget"],["GET","/oid/GetData"],["GET","/oid/GetDataBase64"],["GET","/oid/GetDataDiscovery"],["GET","/api/v1/OpId/{IdentityTrain}/{AppName}/GetDataAccountCustom"],["GET","/api/v1/OpId/{IdentityTrain}/{AppName}/GetDataItem_ByTarget"],["GET","/api/v1/OpId/{IdentityTrain}/{AppName}/GetData"],["GET","/api/v1/OpId/{IdentityTrain}/{AppName}/GetDataBase64"],["GET","/api/v1/OpId/{IdentityTrain}/{AppName}/GetDataDiscovery"],["GET","/api/v1/Qoboto/GetDataValue/GetDataAccountCustom"],["GET","/api/v1/Qoboto/GetDataValue/GetDataItem_ByTarget"],["GET","/api/v1/Qoboto/GetDataValue/GetData"],["GET","/api/v1/Qoboto/GetDataValue/GetDataBase64"],["GET","/api/v1/Qoboto/GetDataValue/GetDataDiscovery"]],"Barcode Management":[["POST","/api/v1/Barcode/Generate/GenerateBarcode"],["POST","/api/v1/Barcode/Reader/ReadBarcode"]],"BizFirstAI.com - AI Agent":[["GET","/api/v1/BizFirstAiAgent/FindAiAgentInformation"],["GET","/api/v1/BizFirstAiAgent/GetDataItems"]],"BizFirstAI.com - AI Data Store (RAG Models)":[["GET","/api/v1/BizFirstAiDataStore/FindAiDataStoreInformation"],["GET","/api/v1/BizFirstAiDataStore/GetDataItems"]],"Business Network":[["POST","/api/v1/BusinessNetwork/Save"],["POST","/api/v1/BusinessNetwork/Search"],["GET","/api/v1/BusinessNetwork/FetchNetwork/{BusinessNetworkID}"],["GET","/api/v1/BusinessNetwork/FetchNetworkByName/{Name}"],["GET","/api/v1/BusinessNetwork/FetchNetworkByCode/{Code}"],["GET","/api/v1/BusinessNetwork/FetchNetworkBySubdomain/{Subdomain}"],["GET","/api/v1/BusinessNetwork/SearchOpenNetworks"],["POST","/api/v1/BusinessNetwork/SearchOpenNetworks2"],["POST","/api/v1/BusinessNetwork/JoinNetwork"]],"Communication Message":[["POST","/api/v1/messaging/Communication/SendMessage"],["POST","/api/v1/messaging/Communication/SearchMessages"]],"Name Translation Services":[["GET","/api/v1/Dao/DaoIDLookup/TranslateNameToString/{Name}"],["GET","/api/v1/Dao/DaoIDLookup/TranslateNameToData/{Name}"],["GET","/api/v1/Dao/DaoIDLookup/ReverseTranslateNameToString/{Value}"],["GET","/api/v1/Dao/DaoIDLookup/ReverseTranslateNameToData/{Value}"],["GET","/api/v1/NameLookup/NameLookupGeneric/TranslateNameToString/{Name}"],["GET","/api/v1/NameLookup/NameLookupGeneric/TranslateNameToData/{Name}"],["GET","/api/v1/NameLookup/NameLookupGeneric/ReverseTranslateNameToString/{Value}"],["GET","/api/v1/NameLookup/NameLookupGeneric/ReverseTranslateNameToData/{Value}"],["GET","/api/v1/PetID/PetTagIDLookup/TranslateNameToString/{Name}"],["GET","/api/v1/PetID/PetTagIDLookup/TranslateNameToData/{Name}"],["GET","/api/v1/PetID/PetTagIDLookup/ReverseTranslateNameToString/{Value}"],["GET","/api/v1/PetID/PetTagIDLookup/ReverseTranslateNameToData/{Value}"],["GET","/api/v1/RFID/RfidToIdentityLookup/TranslateNameToString/{Name}"],["GET","/api/v1/RFID/RfidToIdentityLookup/TranslateNameToData/{Name}"],["GET","/api/v1/RFID/RfidToIdentityLookup/ReverseTranslateNameToString/{Value}"],["GET","/api/v1/RFID/RfidToIdentityLookup/ReverseTranslateNameToData/{Value}"]],"Software Testing for API":[["GET","/api/v1/DiscoveryDataServices/ExecuteApiTestByApiRequestID"],["GET","/api/v1/DiscoveryEnvelopServices/ExecuteApiTestByApiRequestID"],["GET","/ExecuteApiTestByApiRequestID"],["GET","/api/v1/ValueServices/ExecuteApiTestByApiRequestID"],["GET","/api/v1/XMLServices/ExecuteApiTestByApiRequestID"]],"Accumulate Account Management":[["GET","/api/v1/DiscoveryDataServices/GetAccounts"],["GET","/api/v1/DiscoveryDataServices/GetAdiDetails"],["GET","/api/v1/DiscoveryDataServices/GetDirectoryUrls"],["GET","/api/v1/DiscoveryDataServices/GetKeyBookAccount"],["GET","/api/v1/DiscoveryDataServices/GetTokenAccount"],["GET","/api/v1/DiscoveryDataServices/GetBalance"],["GET","/api/v1/DiscoveryDataServices/GetTokenUrl"],["GET","/api/v1/DiscoveryDataServices/GetPendingTransactions"],["GET","/api/v1/DiscoveryDataServices/GetDataAccount"],["GET","/api/v1/DiscoveryDataServices/GetDataAccountCustom"],["GET","/api/v1/DiscoveryDataServices/GetDataAccount_Records"],["GET","/api/v1/DiscoveryDataServices/CreateDataEntry"],["GET","/api/v1/DiscoveryDataServices/SendToken"],["GET","/api/v1/DiscoveryDataServices/CreateIdentity"],["GET","/api/v1/DiscoveryDataServices/CreateToken"],["GET","/api/v1/DiscoveryDataServices/CreateTokenAccount"],["GET","/api/v1/DiscoveryDataServices/CreateDataAccount"],["GET","/api/v1/DiscoveryDataServices/CreateDataAccountByName"],["GET","/api/v1/DiscoveryEnvelopServices/GetAccounts"],["GET","/api/v1/DiscoveryEnvelopServices/GetAdiDetails"],["GET","/api/v1/DiscoveryEnvelopServices/GetDirectoryUrls"],["GET","/api/v1/DiscoveryEnvelopServices/GetKeyBookAccount"],["GET","/api/v1/DiscoveryEnvelopServices/GetTokenAccount"],["GET","/api/v1/DiscoveryEnvelopServices/GetBalance"],["GET","/api/v1/DiscoveryEnvelopServices/GetTokenUrl"],["GET","/api/v1/DiscoveryEnvelopServices/GetPendingTransactions"],["GET","/api/v1/DiscoveryEnvelopServices/GetDataAccount"],["GET","/api/v1/DiscoveryEnvelopServices/GetDataAccountCustom"],["GET","/api/v1/DiscoveryEnvelopServices/GetDataAccount_Records"],["GET","/api/v1/DiscoveryEnvelopServices/CreateDataEntry"],["GET","/api/v1/DiscoveryEnvelopServices/SendToken"],["GET","/api/v1/DiscoveryEnvelopServices/CreateIdentity"],["GET","/api/v1/DiscoveryEnvelopServices/CreateToken"],["GET","/api/v1/DiscoveryEnvelopServices/CreateTokenAccount"],["GET","/api/v1/DiscoveryEnvelopServices/CreateDataAccount"],["GET","/api/v1/DiscoveryEnvelopServices/CreateDataAccountByName"],["GET","/GetAccounts"],["GET","/GetAdiDetails"],["GET","/GetDirectoryUrls"],["GET","/GetKeyBookAccount"],["GET","/GetTokenAccount"],["GET","/GetBalance"],["GET","/GetTokenUrl"],["GET","/GetPendingTransactions"],["GET","/GetDataAccount"],["GET","/GetDataAccountCustom"],["GET","/GetDataAccount_Records"],["GET","/CreateDataEntry"],["GET","/SendToken"],["GET","/CreateIdentity"],["GET","/CreateToken"],["GET","/CreateTokenAccount"],["GET","/CreateDataAccount"],["GET","/CreateDataAccountByName"],["GET","/api/v1/ValueServices/GetAccounts"],["GET","/api/v1/ValueServices/GetAdiDetails"],["GET","/api/v1/ValueServices/GetDirectoryUrls"],["GET","/api/v1/ValueServices/GetKeyBookAccount"],["GET","/api/v1/ValueServices/GetTokenAccount"],["GET","/api/v1/ValueServices/GetBalance"],["GET","/api/v1/ValueServices/GetTokenUrl"],["GET","/api/v1/ValueServices/GetPendingTransactions"],["GET","/api/v1/ValueServices/GetDataAccount"],["GET","/api/v1/ValueServices/GetDataAccountCustom"],["GET","/api/v1/ValueServices/GetDataAccount_Records"],["GET","/api/v1/ValueServices/CreateDataEntry"],["GET","/api/v1/ValueServices/SendToken"],["GET","/api/v1/ValueServices/CreateIdentity"],["GET","/api/v1/ValueServices/CreateToken"],["GET","/api/v1/ValueServices/CreateTokenAccount"],["GET","/api/v1/ValueServices/CreateDataAccount"],["GET","/api/v1/ValueServices/CreateDataAccountByName"],["GET","/api/v1/XMLServices/GetAccounts"],["GET","/api/v1/XMLServices/GetAdiDetails"],["GET","/api/v1/XMLServices/GetDirectoryUrls"],["GET","/api/v1/XMLServices/GetKeyBookAccount"],["GET","/api/v1/XMLServices/GetTokenAccount"],["GET","/api/v1/XMLServices/GetBalance"],["GET","/api/v1/XMLServices/GetTokenUrl"],["GET","/api/v1/XMLServices/GetPendingTransactions"],["GET","/api/v1/XMLServices/GetDataAccount"],["GET","/api/v1/XMLServices/GetDataAccountCustom"],["GET","/api/v1/XMLServices/GetDataAccount_Records"],["GET","/api/v1/XMLServices/CreateDataEntry"],["GET","/api/v1/XMLServices/SendToken"],["GET","/api/v1/XMLServices/CreateIdentity"],["GET","/api/v1/XMLServices/CreateToken"],["GET","/api/v1/XMLServices/CreateTokenAccount"],["GET","/api/v1/XMLServices/CreateDataAccount"],["GET","/api/v1/XMLServices/CreateDataAccountByName"]],"Data Message":[["POST","/api/v1/messaging/EntityRecords/SendMessage"],["POST","/api/v1/messaging/EntityRecords/SearchEntityRecords"]],"Get Presigned Upload Url":[["GET","/api/v1/FileUploadGate"]],"KycOnLedger.com KYC Management Services":[["GET","/api/v1/KycOnLedgerDataItem/GetDataItem_All"],["GET","/api/v1/LedgerDocumentsDataItem/GetDataItem_All"]],"ID Translation Services":[["GET","/api/v1/IdLookup/TranslateNameToDataAsString/{Name}"],["GET","/api/v1/IdLookup/TranslateNameToData/{Name}"],["GET","/api/v1/IdLookup/ReverseTranslateNameToDataAsString/{Value}"],["GET","/api/v1/IdLookup/ReverseTranslateNameToData/{Value}"]],"OperateDid.com - W3C DID":[["GET","/did/{Identity}"],["GET","/did/Read/{Identity}"]],"ID based value supplier":[["GET","/api/v1/Id/{Identity}/ProfileLogo"]],"Qoboto.com - Interact with Your Social Profile":[["GET","/api/v1/Id/All"],["GET","/api/v1/Id/ProfileFullName"],["GET","/api/v1/Id/ProfileDescription"],["GET","/api/v1/Id/ProfileLogoUrl"],["GET","/api/v1/Id/ProfileLogo/{IdentityName}"],["GET","/api/v1/Id/ProfileBackgroundImageUrl"],["GET","/api/v1/Id/ProfileHeaderImageUrl"],["GET","/api/v1/Id/ProfileBackgroundVideoUrl"],["GET","/api/v1/Qoboto/GetDataValue/All"],["GET","/api/v1/Qoboto/GetDataValue/ProfileFullName"],["GET","/api/v1/Qoboto/GetDataValue/ProfileDescription"],["GET","/api/v1/Qoboto/GetDataValue/ProfileLogoUrl"],["GET","/api/v1/Qoboto/GetDataValue/ProfileLogo/{IdentityName}"],["GET","/api/v1/Qoboto/GetDataValue/ProfileBackgroundImageUrl"],["GET","/api/v1/Qoboto/GetDataValue/ProfileHeaderImageUrl"],["GET","/api/v1/Qoboto/GetDataValue/ProfileBackgroundVideoUrl"]],"OperateDid.com - Operate Identifier":[["GET","/oid/{Identity}"],["GET","/oid/Read/{Identity}"]],"Oprate ID based data service":[["GET","/api/v1/OpId/{IdentityTrain}/{AppName}/Data"],["GET","/api/v1/OpId/{IdentityTrain}/{AppName}/Section/{SectionName}"],["GET","/api/v1/OpId/{IdentityTrain}/{AppName}/Section/{SectionName}/Field/{FieldName}"]],"Organization":[["POST","/api/v1/Organization/Save"],["POST","/api/v1/Organization/Search"]],"Manage Payment Transaction":[["POST","/api/v1/PaymentTransaction/ProcessPaymentTransactionEvent"]],"ProductListing":[["POST","/api/v1/ProductListing/Save"],["POST","/api/v1/ProductListing/Search"],["POST","/api/v1/ProductListing/PublicSearch"],["GET","/api/v1/ProductListing/PublicSearchFavorites"],["GET","/api/v1/ProductListing/PublicSearchHot"],["GET","/api/v1/ProductListing/PublicSearchSponsored"]],"PreSaleChain.com Promotions Services":[["POST","/api/v1/Promotion/CreatePromotion"],["POST","/api/v1/Promotion/GetPromotionByCode"],["POST","/api/v1/Promotion/GetMyPromotions"],["POST","/api/v1/PromotionClaim/SubmitClaim"],["POST","/api/v1/PromotionClaim/GetClaims"]],"Public Product Listing":[["GET","/api/v1/PublicProductListing/Search"],["GET","/api/v1/PublicProductListing/SearchFavorites"],["GET","/api/v1/PublicProductListing/SearchHot"],["GET","/api/v1/PublicProductListing/SearchSponsored"]],"Token Gateway":[["GET","/api/v1/TokenGateway/getNonce/{address}/{messageId}"],["POST","/api/v1/TokenGateway/Verify"]],"Wallet User Registration Services":[["POST","/api/v1/WalletUserRegistration/RegisterUser"]],"Licenses Management":[["POST","/api/v1/WalletLicense/GetLicenses"]],"Wallet User":[["POST","/api/v1/WalletUser/SearchUsers"],["POST","/api/v1/WalletUser/FetchUserFullInfo"]],"Web User":[["POST","/api/v1/WebUser/SearchOpenUsers"],["POST","/api/v1/WebUser/SearchOpenUsersFull"]]};
+
+  const container = document.getElementById('domains-container');
+  const searchInput = document.getElementById('search');
+  const resultCount = document.getElementById('result-count');
+  const emptyState = document.getElementById('empty-state');
+
+  let totalCount = 0;
+  Object.keys(DATA).forEach((domain, idx) => {
+    const eps = DATA[domain];
+    totalCount += eps.length;
+    const details = document.createElement('details');
+    details.className = 'domain-block';
+    details.dataset.domain = domain.toLowerCase();
+    if (idx < 3) details.open = true;
+    const summary = document.createElement('summary');
+    summary.innerHTML = '<span class="meta"><span class="chevron">▸</span>' + domain + '</span><span class="count">' + eps.length + '</span>';
+    details.appendChild(summary);
+    const list = document.createElement('div');
+    list.className = 'endpoints';
+    eps.forEach(([method, path]) => {
+      const row = document.createElement('div');
+      row.className = 'endpoint-row';
+      row.dataset.method = method.toLowerCase();
+      row.dataset.path = path.toLowerCase();
+      row.innerHTML = '<span class="method ' + method + '">' + method + '</span><span class="path">' + path + '</span>';
+      list.appendChild(row);
+    });
+    details.appendChild(list);
+    container.appendChild(details);
+  });
+
+  resultCount.textContent = totalCount + ' endpoints';
+
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.trim().toLowerCase();
+    let visibleTotal = 0;
+    let anyVisible = false;
+    document.querySelectorAll('.domain-block').forEach(block => {
+      let blockHasMatch = false;
+      block.querySelectorAll('.endpoint-row').forEach(row => {
+        const match = !q || row.dataset.path.includes(q) || row.dataset.method.includes(q) || block.dataset.domain.includes(q);
+        row.classList.toggle('hidden', !match);
+        if (match) { blockHasMatch = true; visibleTotal++; }
+      });
+      block.classList.toggle('hidden', !blockHasMatch);
+      if (blockHasMatch && q) block.open = true;
+      if (blockHasMatch) anyVisible = true;
+    });
+    resultCount.textContent = visibleTotal + ' endpoints';
+    emptyState.style.display = anyVisible || !q ? 'none' : 'block';
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Getting Started — AccumulatePlatform</title>
+<meta name="description" content="How to call AccumulatePlatform: base URL, the wallet-signature auth flow, and a first request.">
+<link rel="icon" type="image/png" href="https://bizfirstai.com/website/assets/Logo/logo-m.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --ink: #0B0E11; --ink-2: #14181D; --ink-3: #1B2027;
+    --paper: #EDEAE1; --paper-dim: #B9B6AC;
+    --gold: #C9972E; --gold-bright: #E8B54D; --teal: #3E9C93;
+    --line: #262B31; --muted: #8B9198;
+    --font-display: 'IBM Plex Sans', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--ink); color: var(--paper); font-family: var(--font-display); line-height: 1.65; }
+  a { color: var(--gold); }
+  ::selection { background: var(--gold); color: var(--ink); }
+  :focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 2px; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 28px; }
+
+  nav.top { position: sticky; top: 0; z-index: 50; background: rgba(11,14,17,0.88); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  nav.top .wrap { display: flex; align-items: center; justify-content: space-between; padding-top: 16px; padding-bottom: 16px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--paper); font-weight: 600; font-size: 15px; }
+  .brand img { height: 24px; width: auto; }
+  .brand .mark { font-family: var(--font-mono); color: var(--gold); }
+  nav.top .links { display: flex; align-items: center; gap: 28px; font-size: 14px; }
+  nav.top .links a { color: var(--paper-dim); text-decoration: none; }
+  nav.top .links a:hover { color: var(--paper); }
+  nav.top .links a.active { color: var(--paper); }
+  nav.top .links a.cta { color: var(--ink); background: var(--gold); padding: 8px 16px; border-radius: 6px; font-weight: 600; }
+  nav.top .links a.cta:hover { background: var(--gold-bright); }
+  @media (max-width: 720px) { nav.top .links { display: none; } }
+
+  .page-header { padding: 56px 0 40px; border-bottom: 1px solid var(--line); }
+  .eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--teal); margin-bottom: 14px; }
+  h1 { font-size: clamp(30px, 4.5vw, 42px); font-weight: 700; margin: 0 0 14px; letter-spacing: -0.4px; }
+  .page-header p { color: var(--paper-dim); max-width: 60ch; font-size: 16px; margin: 0; }
+
+  .layout { display: grid; grid-template-columns: 220px 1fr; gap: 48px; padding: 48px 0 96px; }
+  @media (max-width: 860px) { .layout { grid-template-columns: 1fr; } }
+  .toc { position: sticky; top: 90px; align-self: start; font-size: 13.5px; }
+  .toc a { display: block; color: var(--paper-dim); text-decoration: none; padding: 6px 0; border-left: 2px solid transparent; padding-left: 12px; }
+  .toc a:hover { color: var(--paper); }
+
+  .content h2 { font-size: 24px; font-weight: 700; margin: 0 0 6px; padding-top: 8px; letter-spacing: -0.3px; }
+  .content h2 .num { font-family: var(--font-mono); color: var(--gold); font-weight: 500; margin-right: 10px; }
+  .content > section { margin-bottom: 56px; scroll-margin-top: 90px; }
+  .content p { color: var(--paper-dim); font-size: 15.5px; max-width: 68ch; }
+  .content ul { color: var(--paper-dim); font-size: 15.5px; max-width: 68ch; padding-left: 20px; }
+  .content li { margin-bottom: 6px; }
+  .content strong { color: var(--paper); }
+
+  pre {
+    background: var(--ink-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px 20px;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--paper);
+  }
+  pre .c1 { color: var(--muted); }
+  pre .method { color: var(--teal); font-weight: 600; }
+  pre .str { color: var(--gold-bright); }
+  code.inline {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    background: var(--ink-2);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 2px 6px;
+    color: var(--teal);
+  }
+
+  .callout {
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--gold);
+    background: var(--ink-2);
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 14px;
+    color: var(--paper-dim);
+    max-width: 68ch;
+  }
+  .callout strong { color: var(--paper); }
+
+  .step-list { counter-reset: step; list-style: none; padding: 0; max-width: 68ch; }
+  .step-list li { counter-increment: step; position: relative; padding-left: 40px; margin-bottom: 20px; }
+  .step-list li::before {
+    content: counter(step);
+    position: absolute; left: 0; top: 0;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--ink-2);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .step-list strong { display: block; color: var(--paper); margin-bottom: 4px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; max-width: 68ch; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+  td code { font-family: var(--font-mono); font-size: 12.5px; color: var(--teal); }
+
+  footer { padding: 32px 0 48px; border-top: 1px solid var(--line); }
+  footer .wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 13px; color: var(--muted); }
+  footer a { color: var(--muted); }
+  footer a:hover { color: var(--paper); }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="wrap">
+    <a href="index.html" class="brand">
+      <img src="https://bizfirstai.com/website/assets/Logo/logo-m.png" alt="BizFirstAi">
+      Accumulate<span class="mark">Platform</span>
+    </a>
+    <div class="links">
+      <a href="get-started.html" class="active">Guide</a>
+      <a href="api-reference.html">Reference</a>
+      <a href="https://docs.bizfirstai.com/search" target="_blank" rel="noopener">Search Docs</a>
+      <a href="https://accumulateplatform.com/swagger/index.html" target="_blank" rel="noopener" class="cta">Open Swagger ↗</a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="wrap">
+    <div class="eyebrow">Guide</div>
+    <h1>Getting Started</h1>
+    <p>Everything you need to make your first call to AccumulatePlatform — base URL, authentication, and a working example.</p>
+  </div>
+</header>
+
+<div class="wrap layout">
+  <nav class="toc">
+    <a href="#base-url">Base URL</a>
+    <a href="#public-vs-signed">Public vs. signed calls</a>
+    <a href="#auth-flow">Wallet signature auth</a>
+    <a href="#first-request">Your first request</a>
+    <a href="#domains">Finding the right endpoint</a>
+    <a href="#next">What's next</a>
+  </nav>
+
+  <div class="content">
+
+    <section id="base-url">
+      <h2><span class="num">01</span>Base URL</h2>
+      <p>Every endpoint hangs off a single host. There's no versioned subdomain or region to pick — one host, one ledger.</p>
+      <pre>https://accumulateplatform.com</pre>
+      <p>Most paths additionally include a version segment, <code class="inline">/api/v1/</code>, though a handful of legacy discovery routes sit at the root. The reference page shows the exact path for every endpoint.</p>
+    </section>
+
+    <section id="public-vs-signed">
+      <h2><span class="num">02</span>Public vs. signed calls</h2>
+      <p>AccumulatePlatform doesn't use API keys. Instead, calls fall into two groups:</p>
+      <ul>
+        <li><strong>Public reads</strong> — lookups, name translations, product listings, DID resolution. No credentials required; just call the endpoint.</li>
+        <li><strong>Signed writes</strong> — anything that registers, sends, or mutates on-chain state (sending an AI message, verifying a token, saving a business network). These require a wallet signature attached to the request body.</li>
+      </ul>
+      <div class="callout"><strong>How to tell which is which:</strong> if the request schema wraps its payload in an <code class="inline">authRequest</code> object, it's a signed call. The reference page flags this per endpoint where it's declared in the spec.</div>
+    </section>
+
+    <section id="auth-flow">
+      <h2><span class="num">03</span>Wallet signature auth</h2>
+      <p>Signed calls follow a three-step nonce-and-sign pattern, the same one used across the wider Accumulate network:</p>
+      <ol class="step-list">
+        <li>
+          <strong>Request a nonce for your address</strong>
+          <pre><span class="method">GET</span> /api/v1/TokenGateway/getNonce/{address}/{messageId}</pre>
+        </li>
+        <li>
+          <strong>Sign the returned message locally</strong>
+          <p style="margin:0;">Sign it with the private key for <code class="inline">address</code> — this never touches the network. You now have a <code class="inline">signature</code>.</p>
+        </li>
+        <li>
+          <strong>Attach it to your call</strong>
+          <p style="margin:0 0 10px;">Include the signed payload as <code class="inline">authRequest</code> in the body of the endpoint you're calling:</p>
+          <pre>{
+  <span class="c1">// wraps every signed request</span>
+  "authRequest": {
+    "address": <span class="str">"acc://your-identity.acme"</span>,
+    "signature": <span class="str">"&lt;signature from step 2&gt;"</span>,
+    "authMessage": {
+      "nonce": <span class="str">"&lt;nonce from step 1&gt;"</span>,
+      "timeStamp": 1732900000,
+      "message": <span class="str">"&lt;message that was signed&gt;"</span>
+    }
+  },
+  <span class="c1">// endpoint-specific fields go alongside authRequest</span>
+  "Info": { "...": "..." }
+}</pre>
+        </li>
+      </ol>
+      <div class="callout">Response bodies aren't formally typed in the published spec beyond a <code class="inline">200 OK</code>. Use <a href="https://accumulateplatform.com/swagger/index.html" target="_blank" rel="noopener">Swagger's "Try it out"</a> against a real address to see the live shape before you build against it.</div>
+    </section>
+
+    <section id="first-request">
+      <h2><span class="num">04</span>Your first request</h2>
+      <p>Start with a public read — no signing required. This resolves a Qoboto social profile field for an identity:</p>
+      <pre><span class="method">GET</span> https://accumulateplatform.com/api/v1/Id/ProfileFullName?Identity=acc://example.acme</pre>
+      <p>Or as curl:</p>
+      <pre>curl <span class="str">"https://accumulateplatform.com/api/v1/Id/ProfileFullName?Identity=acc://example.acme"</span></pre>
+      <p>Swap the identity for one you know exists to see real data come back.</p>
+    </section>
+
+    <section id="domains">
+      <h2><span class="num">05</span>Finding the right endpoint</h2>
+      <p>284 endpoints is a lot to scan by hand, so they're grouped into domains by what they touch:</p>
+      <table>
+        <tr><th>Looking for…</th><th>Start here</th></tr>
+        <tr><td>Accounts, balances, ADI details</td><td><code>Accumulate Account Management</code></td></tr>
+        <tr><td>Raw on-chain data entries</td><td><code>Blockchain Interactions</code></td></tr>
+        <tr><td>Resolving a name to an identity</td><td><code>Identity &amp; Name Translation</code></td></tr>
+        <tr><td>Social profile fields</td><td><code>Qoboto.com Social Profiles</code></td></tr>
+        <tr><td>Sending or receiving funds</td><td><code>BankOnLedger.com</code></td></tr>
+        <tr><td>Talking to an AI agent</td><td><code>OperateAI</code></td></tr>
+      </table>
+      <p style="margin-top:20px;"><a href="api-reference.html">Browse all 32 domains in the full reference →</a></p>
+    </section>
+
+    <section id="next">
+      <h2><span class="num">06</span>What's next</h2>
+      <ul>
+        <li><a href="api-reference.html">API Reference</a> — every endpoint, searchable, grouped by domain.</li>
+        <li><a href="https://accumulateplatform.com/swagger/index.html" target="_blank" rel="noopener">Live Swagger UI</a> — the authoritative, always-current spec, with "Try it out."</li>
+        <li><a href="https://docs.bizfirstai.com/search" target="_blank" rel="noopener">docs.bizfirstai.com</a> — guides for the products built on this API.</li>
+      </ul>
+    </section>
+
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>AccumulatePlatform — a BizFirstAi product</span>
+    <span>
+      <a href="index.html">Home</a> ·
+      <a href="api-reference.html">Reference</a> ·
+      <a href="https://bizfirstai.com" target="_blank" rel="noopener">bizfirstai.com</a>
+    </span>
+  </div>
+</footer>
+
+</body>
+</html>
